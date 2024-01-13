@@ -1,4 +1,4 @@
-const { Photo } = require("../../shared/model/Photo");
+const { Photo } = require("../shared/model/Photo");
 const { generateAuthTokens } = require("./generate.token");
 
 const fetchUserPhotosAndSendResponse = async (user, res) => {

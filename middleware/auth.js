@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
-const { User } = require("../../shared/model/User"); // Import your User model
+const { User } = require("../shared/model/User"); // Import your User model
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers["authorization"];

@@ -1,5 +1,5 @@
 const cron = require("node-cron");
-const OTP = require("../../shared/model/Otp");
+const OTP = require("../shared/model/Otp");
 
 const runOTPCleanup = () => {
   // Schedule a task to run daily and delete expired OTP entries

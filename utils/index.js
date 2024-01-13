@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-const { UserActivity } = require("../../shared/model/UserActivity");
-const { Report } = require("../../shared/model/Report");
+const { UserActivity } = require("../shared/model/UserActivity");
+const { Report } = require("../shared/model/Report");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Function to paginate the results

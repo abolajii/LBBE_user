@@ -1,4 +1,4 @@
-const { OTP } = require("../../shared/model/Otp");
+const { OTP } = require("../shared/model/Otp");
 const nodemailer = require("../config/nodemailer.config");
 
 const generateOtp = (num = 4) => {

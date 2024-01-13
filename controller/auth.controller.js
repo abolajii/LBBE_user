@@ -26,10 +26,10 @@ const {
 } = require("../utils");
 const { fetchUserPhotos } = require("../utils/fetch.user.photos");
 
-const { generateUniqueTicketId } = require("../../user/utils");
+const { generateUniqueTicketId } = require("../shared/utils");
 const uploadImage = require("../utils/upload.image");
-const { paginate } = require("../../shared/utils/paginate");
-const { calculateAge } = require("../../shared/utils");
+const { paginate } = require("../shared/utils/paginate");
+const { calculateAge } = require("../shared/utils");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
