@@ -80,7 +80,7 @@ const sigInWithOtherServices = async (req, res) => {
       }
     } else if (phone_number) {
       // User exists, sign in the user
-      let user = await User.findOne({ phoneNumber: phone_number });
+      let user = await User.findOne({ phone: phone_number });
       if (user) {
         fetchUserPhotosAndSendResponse(user, res);
       } else {
@@ -98,12 +98,12 @@ const sigInWithOtherServices = async (req, res) => {
 
 const verifyPhoneNumber = async (req, res) => {
   try {
-    const { phoneNumber } = req.body;
-    const formattedPhoneNumber = `+${phoneNumber}`;
+    const { phone } = req.body;
+    const formattedPhoneNumber = `+${phone}`;
 
     // Check if the phone number exists in the database
     const existingUser = await User.findOne({
-      phoneNumber: formattedPhoneNumber,
+      phone: formattedPhoneNumber,
     });
 
     if (existingUser) {
@@ -192,7 +192,7 @@ const registerNewUser = async (req, res) => {
     });
 
     // Find the "Free Plan" subscription in the database
-    const freePlan = await SubscriptionPlan.findOne({ name: "Free Plan" });
+    const freePlan = await Subscription.findOne({ name: "Free Plan" });
     // Assign the subscription to the user
     newUser.subscription = freePlan;
     newUser.swipeLimit = freePlan.features.swipeLimit;

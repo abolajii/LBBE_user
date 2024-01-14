@@ -128,7 +128,7 @@ const registerUser = async (req, res) => {
 
 const registerUserWithOtherServices = async (req, res) => {
   const { name, email, dob, my_interests, interested_gender, gender, phone } =
-    req.body;
+    req.body.data;
   const userId = req.body.id;
 
   try {
