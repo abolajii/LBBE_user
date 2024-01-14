@@ -670,7 +670,7 @@ const uploadPicture = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error uploading photos: " + error);
+    res.status(500).json({ error });
   }
 };
 
