@@ -12,7 +12,7 @@ const fetchUserPhotosAndSendResponse = async (user, res) => {
   const { photos, password, ...userDetails } = user.toObject();
 
   // Generate authentication tokens
-  const { authToken } = generateAuthTokens(user);
+  const { accessToken, refreshToken } = generateAuthTokens(user);
 
   // Attach the authToken to the response header
   res.setHeader("Authorization", `Bearer ${authToken}`);
@@ -20,6 +20,8 @@ const fetchUserPhotosAndSendResponse = async (user, res) => {
   res.status(200).json({
     message: "Authentication successful",
     user: { photos: photoToSend, ...userDetails },
+    accessToken,
+    refreshToken,
   });
 };
 
