@@ -57,7 +57,7 @@ const getAllUsers = async (req, res) => {
     const loggedInUser = await User.findById(loggedInUserId);
 
     if (!loggedInUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // // Calculate similarity in batches of 10 users
@@ -115,8 +115,7 @@ const getAllUsers = async (req, res) => {
       length: userCount,
     });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -246,14 +245,14 @@ const userLikes = async (req, res) => {
         firstPhoto: receiver.photos[0], // Assuming photos is an array of photo URLs
       };
 
-      res.json({
+      res.status(200).json({
         message: "It's a match!",
         matchId: match._id,
         conversationId: conversation._id,
         matchedUser,
       });
     } else {
-      res.json({ message: "Like sent successfully.", like });
+      res.status(200).json({ message: "Like sent successfully.", like });
     }
   } catch (error) {
     console.error("Error creating like:", error);
@@ -470,7 +469,7 @@ const sendMessage = async (req, res) => {
       });
     });
 
-    res.json({ message: "Message sent successfully.", newMessage });
+    res.status(200).json({ message: "Message sent successfully.", newMessage });
   } catch (error) {
     console.error("Error sending message:", error);
     res
@@ -619,7 +618,7 @@ const updateUser = async (req, res) => {
 
     // Validate the updatedProfile data, e.g., check for required fields
     if (!updatedProfile) {
-      return res.status(400).json({ message: "Profile data is required" });
+      return res.status(400).json({ error: "Profile data is required" });
     }
 
     // You can update the user's profile in your database here
@@ -631,7 +630,7 @@ const updateUser = async (req, res) => {
     res.status(200).json({ message: "Profile updated successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -797,7 +796,9 @@ const userStatus = async (req, res) => {
       return res.json({ message: success, user });
     }
 
-    return res.json({ message: "User is not upgraded to the specified plan." });
+    return res
+      .status(401)
+      .json({ error: "User is not upgraded to the specified plan." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
@@ -967,14 +968,14 @@ const blockUser = async (req, res) => {
     const blockedUser = await User.findById(blockedUserId);
 
     if (!blockedUser) {
-      return res.status(404).json({ message: "Blocked user not found" });
+      return res.status(404).json({ error: "Blocked user not found" });
     }
 
     // Check if there is an existing block document
     const existingBlock = await Block.findOne({ user: userId, blockedUserId });
 
     if (existingBlock) {
-      return res.status(400).json({ message: "User already blocked" });
+      return res.status(400).json({ error: "User already blocked" });
     }
 
     // Create a new Block document to represent the block
@@ -992,10 +993,11 @@ const blockUser = async (req, res) => {
       .populate("subscription photos preferences blockedUsers")
       .exec();
 
-    res.json({ message: "User blocked successfully", user: updatedUser });
+    res
+      .status(201)
+      .json({ message: "User blocked successfully", user: updatedUser });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -1008,14 +1010,14 @@ const unblockUser = async (req, res) => {
     const blockedUser = await User.findById(blockedUserId);
 
     if (!blockedUser) {
-      return res.status(404).json({ message: "Blocked user not found" });
+      return res.status(404).json({ error: "Blocked user not found" });
     }
 
     // Check if there is an existing block document
     const existingBlock = await Block.findOne({ user: userId, blockedUserId });
 
     if (!existingBlock) {
-      return res.status(400).json({ message: "User is not blocked" });
+      return res.status(400).json({ error: "User is not blocked" });
     }
 
     // Delete the block document to unblock the user
@@ -1029,7 +1031,7 @@ const unblockUser = async (req, res) => {
     res.json({ message: "User unblocked successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -1088,7 +1090,7 @@ const updateCoordinates = async (req, res) => {
     ).populate("subscription photos preferences");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     return res
@@ -1096,7 +1098,7 @@ const updateCoordinates = async (req, res) => {
       .json({ message: "User coordinates updated successfully", user });
   } catch (error) {
     console.error("Error updating user coordinates:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -1111,7 +1113,7 @@ const filterUsers = async (req, res) => {
     if (maxDistanceInMeters < 0) {
       return res
         .status(400)
-        .json({ message: "Max distance must be non-negative." });
+        .json({ error: "Max distance must be non-negative." });
     }
 
     // Extract age range from req.body if it exists
@@ -1132,7 +1134,7 @@ const filterUsers = async (req, res) => {
     ) {
       return res
         .status(400)
-        .json({ message: "Logged-in user has no location information." });
+        .json({ error: "Logged-in user has no location information." });
     }
 
     const { coordinates } = loggedInUser.coords;
@@ -1229,7 +1231,7 @@ const filterUsers = async (req, res) => {
     res.json({ users: mergedUsers });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error while filtering users." });
+    res.status(500).json({ error: "Error while filtering users." });
   }
 };
 
@@ -1242,14 +1244,14 @@ const updatePassword = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Compare the old password with the hashed password stored in the database
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "Old password is incorrect" });
+      return res.status(400).json({ error: "Old password is incorrect" });
     }
 
     // Hash the new password
@@ -1262,7 +1264,7 @@ const updatePassword = async (req, res) => {
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     console.error("Error updating password:", error);
-    res.status(500).json({ message: "Error updating password" });
+    res.status(500).json({ error: "Error updating password" });
   }
 };
 
@@ -1277,14 +1279,14 @@ const deleteUserPicture = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Find the photo by its ID in the user's photos array
     const photo = user.photos.find((photo) => photo._id.toString() === photoId);
 
     if (!photo) {
-      return res.status(404).json({ message: "Photo not found" });
+      return res.status(404).json({ error: "Photo not found" });
     }
 
     // Remove the photo from the user's photos array
@@ -1296,7 +1298,7 @@ const deleteUserPicture = async (req, res) => {
     res.status(200).json({ message: "Photo deleted successfully", user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

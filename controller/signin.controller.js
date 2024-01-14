@@ -76,7 +76,7 @@ const sigInWithOtherServices = async (req, res) => {
       if (user) {
         fetchUserPhotosAndSendResponse(user, res);
       } else {
-        res.status(404).json({ message: "User not found. Please sign up." });
+        res.status(404).json({ error: "User not found. Please sign up." });
       }
     } else if (phone_number) {
       // User exists, sign in the user
@@ -84,11 +84,11 @@ const sigInWithOtherServices = async (req, res) => {
       if (user) {
         fetchUserPhotosAndSendResponse(user, res);
       } else {
-        res.status(404).json({ message: "User not found. Please sign up." });
+        res.status(404).json({ error: "User not found. Please sign up." });
       }
     } else {
       // User does not exist, handle the registration process
-      res.status(404).json({ message: "User not found. Please sign up." });
+      res.status(404).json({ error: "User not found. Please sign up." });
     }
   } catch (error) {
     console.log(error);
@@ -111,10 +111,10 @@ const verifyPhoneNumber = async (req, res) => {
     } else {
       res
         .status(400)
-        .json({ message: "User with phone number does not exists." });
+        .json({ error: "User with phone number does not exists." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error on the server." });
+    res.status(500).json({ error: "Error on the server." });
   }
 };
 
@@ -126,7 +126,7 @@ const checkEmail = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "Email not found" });
+      return res.status(404).json({ error: "Email not found" });
     }
 
     // console.log(user);
@@ -134,7 +134,7 @@ const checkEmail = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Error on the server" });
+    res.status(500).json({ error: "Error on the server" });
   }
 };
 
@@ -146,7 +146,7 @@ const updatePassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Generate a new hash for the new password
@@ -159,7 +159,7 @@ const updatePassword = async (req, res) => {
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error on the server" });
+    res.status(500).json({ error: "Error on the server" });
   }
 };
 

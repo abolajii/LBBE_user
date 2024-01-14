@@ -25,7 +25,7 @@ const checkDuplicateEmail = async (req, res) => {
     });
 
     if (existingUser) {
-      res.status(400).json({ message: "User with email already exists." });
+      res.status(400).json({ error: "User with email already exists." });
     } else {
       await generateAndSendOTP(email);
 
@@ -33,7 +33,7 @@ const checkDuplicateEmail = async (req, res) => {
     }
   } catch (error) {
     logger.error("Error occurred:", error);
-    res.status(500).json({ message: "Error on the server." });
+    res.status(500).json({ error: "Error on the server." });
   }
 };
 
@@ -48,16 +48,14 @@ const checkDuplicatePhoneNumber = async (req, res) => {
 
     if (existingUser) {
       // User with the phone number already exists
-      res
-        .status(400)
-        .json({ message: "User with phone number already exists." });
+      res.status(400).json({ error: "User with phone number already exists." });
     } else {
       // Phone number is unique
       res.status(200).json({ message: "Phone number is available." });
     }
   } catch (error) {
     logger.error("Error occurred:", error);
-    res.status(500).json({ message: "Error on the server." });
+    res.status(500).json({ error: "Error on the server." });
   }
 };
 
@@ -180,11 +178,11 @@ const registerUserWithOtherServices = async (req, res) => {
         .status(200)
         .json({ message: "User updated successfully", user: updatedUser });
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
     logger.error("Error occurred:", error);
-    res.status(500).json({ message: "Error on the server" });
+    res.status(500).json({ error: "Error on the server" });
   }
 };
 
@@ -258,9 +256,7 @@ const verifyOtherServices = async (req, res) => {
 
       if (userByEmail) {
         // User already exists, prompt them to sign in
-        res
-          .status(409)
-          .json({ message: "User already exists. Please sign in." });
+        res.status(409).json({ error: "User already exists. Please sign in." });
       } else {
         // Create a new user in the database with the necessary details
         const newUser = new User({
@@ -325,7 +321,7 @@ const verifyOtp = async (req, res) => {
     res.status(200).json({ message: "OTP verification successful.", email });
   } catch (error) {
     logger.error("Error occurred:", error);
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
