@@ -8,8 +8,8 @@ const fetchUserPhotosAndSendResponse = async (user, res) => {
   // Assign the fetched photos to the user object
   user.photos = photosToAdd;
 
-  const photoToSend = user.photos.map((photo) => photo.imageUrl);
-  const { photos, password, ...userDetails } = user.toObject();
+  // const photoToSend = user.photos.map((photo) => photo.imageUrl);
+  const { password, ...userDetails } = user.toObject();
 
   // Generate authentication tokens
   const { accessToken, refreshToken } = generateAuthTokens(user);
@@ -19,7 +19,7 @@ const fetchUserPhotosAndSendResponse = async (user, res) => {
 
   res.status(200).json({
     message: "Authentication successful",
-    user: { photos: photoToSend, ...userDetails },
+    user: { ...userDetails },
     accessToken,
     refreshToken,
   });
