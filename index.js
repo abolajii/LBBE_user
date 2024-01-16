@@ -152,11 +152,10 @@ app.use("/api", authRoute);
 app.use("/pusher/auth", pusherAuth);
 
 const resetDb = async () => {
-  const user = await User.findByIdAndDelete("6595d5f8e622fa2e9a82c057");
-  // await Favorite.deleteMany();
-  // await Like.deleteMany();
-  // await Dislike.deleteMany();
-  console.log(user);
+  await Like.deleteMany();
+  await Match.deleteMany();
+  await Dislike.deleteMany();
+  // console.log(user);
 };
 
 // resetDb()
