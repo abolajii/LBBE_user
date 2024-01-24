@@ -1392,6 +1392,7 @@ const getTypingStatus = async (req, res) => {
     conversation.participants.map((user) => {
       pusher.trigger(`${user._id.toString()}`, "message:typing", {
         receiver,
+        id,
       });
     });
 
