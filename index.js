@@ -149,7 +149,7 @@ app.use("/api", signUpRoute);
 app.use("/api", signInRoute);
 app.use("/api", authRoute);
 
-app.use("/pusher/auth", pusherAuth);
+app.post("/api/pusher/auth", pusherAuth);
 
 const resetDb = async () => {
   await Like.deleteMany();
