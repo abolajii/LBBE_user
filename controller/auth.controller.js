@@ -1375,15 +1375,30 @@ const getUserLikesAndFav = async (req, res) => {
 };
 
 const getTypingStatus = async (req, res) => {
-  const { id } = req.query;
+  try {
+    const { id } = req.query;
 
-  const { user } = req.body;
+    // Fetch the conversation details by ID
+    const conversation = await Conversation.findById(id);
 
-  await pusher.trigger(id, "message:typing", {
-    sender: user,
-  });
+    if (!conversation) {
+      return res.status(404).send("Conversation not found");
+    }
 
-  res.status(200).send("OK");
+    const receiver = conversation.participants.find(
+      (participant) => String(participant) !== String(req.user._id)
+    );
+
+    // Update the channel trigger to include sender, receiver, and isTyping information
+    await pusher.trigger(id, "message:typing", {
+      receiver,
+    });
+
+    res.status(200).send("OK");
+  } catch (error) {
+    console.error("Error sending typing status:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

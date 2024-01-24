@@ -152,15 +152,15 @@ app.use("/api", authRoute);
 app.post("/api/pusher/auth", pusherAuth);
 
 const resetDb = async () => {
-  await Like.deleteMany();
-  await Match.deleteMany();
-  await Dislike.deleteMany();
+  await Message.deleteMany();
+  // await Match.deleteMany();
+  // await Dislike.deleteMany();
   // console.log(user);
 };
 
-// resetDb()
-//   .then(() => console.log("done"))
-//   .catch((err) => console.log(err));
+resetDb()
+  .then(() => console.log("done"))
+  .catch((err) => console.log(err));
 
 app.listen(port, () => {
   console.log("Server running on port", port);
