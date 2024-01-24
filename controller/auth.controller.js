@@ -1389,9 +1389,10 @@ const getTypingStatus = async (req, res) => {
       (participant) => String(participant) !== String(req.user._id)
     );
 
-    // Update the channel trigger to include sender, receiver, and isTyping information
-    await pusher.trigger(id, "message:typing", {
-      receiver,
+    conversation.participants.map((user) => {
+      pusher.trigger(`${user._id.toString()}`, "message:typing", {
+        receiver,
+      });
     });
 
     res.status(200).send("OK");
